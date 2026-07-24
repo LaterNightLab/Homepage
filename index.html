@@ -94,10 +94,20 @@
       display: block;
       text-decoration: none;
       color: inherit;
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto;
       cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      animation: cardFadeIn 0.6s ease both;
+      animation-delay: var(--delay);
     }
     .gameboy-card:hover { transform: translateY(-8px); }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .gb-body {
       position: relative;
@@ -147,15 +157,11 @@
     }
     .gb-screen-content {
       width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
       position: relative; z-index: 1;
     }
     .gb-screen-content img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    .gameboy-card:hover .gb-screen-content img {
-      transform: scale(1.04);
+      width: 100%; height: 100%;
+      object-fit: cover;
     }
 
     .gb-scanlines::after {
@@ -175,6 +181,16 @@
       border-radius: 2px;
     }
 
+    .gb-screen-empty {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+      font-family: 'Caveat', cursive;
+      color: rgba(255,255,255,0.2);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* D-Pad */
     .gb-dpad {
       position: relative;
       width: 50px; height: 50px;
@@ -201,31 +217,24 @@
       background: #384042; border-radius: 50%; z-index: 1;
     }
 
-    .gb-btn-group {
-      transform: rotate(-25deg);
-      display: flex; gap: 10px;
-      align-items: center;
-    }
-    .gb-btn {
-      width: 28px; height: 28px; border-radius: 50%;
+    /* SINGLE big logo button */
+    .gb-btn-logo {
+      width: 46px; height: 46px;
+      border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 9px;
-      box-shadow: 2px 2px 0 rgba(0,0,0,0.15),
-                  inset 1px 1px 0 rgba(255,255,255,0.12);
+      border: 2.5px solid rgba(0,0,0,0.3);
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,0.15),
+        inset -1px -1px 0 rgba(0,0,0,0.15),
+        2px 2px 0 rgba(0,0,0,0.15);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .gb-btn-b {
-      background: #7B2D55; color: rgba(255,255,255,0.6);
-      border: 1.5px solid #5a1a40;
-    }
-    .gb-btn-a {
-      border: 1.5px solid rgba(0,0,0,0.3);
       overflow: hidden;
     }
-    .gameboy-card:hover .gb-btn-a {
-      transform: scale(0.88);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.2),
-                  inset 1px 1px 0 rgba(255,255,255,0.1);
+    .gameboy-card:hover .gb-btn-logo {
+      transform: scale(0.9);
+      box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.3),
+        0 1px 0 rgba(0,0,0,0.15);
     }
 
     .gb-meta-pill {
@@ -260,16 +269,6 @@
       border-radius: 50%;
       background: var(--gb-color-dark);
       opacity: 0.3;
-    }
-
-    .reveal-up {
-      opacity: 0;
-      transform: translateY(40px) rotate(2deg);
-      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .reveal-up.visible {
-      opacity: 1;
-      transform: translateY(0) rotate(0deg);
     }
   </style>
 </head>
@@ -341,51 +340,45 @@
         <p class="font-hand text-xl text-ink/50 mt-1">click a Game Boy to play →</p>
       </div>
 
-      <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 place-items-center">
+      <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 justify-items-center">
 
         <!-- ===== BALL MERGE ===== -->
-        <a href="https://ball-merge.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card reveal-up" data-game-index="0">
+        <a href="https://ball-merge.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card" style="--delay: 0s;">
           <div class="gb-body" style="--gb-color: #D5C8E8; --gb-color-dark: #B098D0;">
 
-            <!-- Top: LED + brand -->
             <div class="flex items-center gap-2 mb-1 px-2">
               <div class="gb-power-dot"></div>
               <span class="text-[8px] font-display font-600 text-ink/40 uppercase tracking-wider">POWER</span>
             </div>
 
-            <!-- Screen -->
             <div class="gb-screen-bezel">
               <div class="gb-screen">
                 <div class="gb-screen-content">
-                  <img src="ball_merge.jpg" alt="Ball Merge screenshot" loading="lazy">
+                  <img src="ball_merge_screenshot.png" alt="Ball Merge"
+                       onerror="this.style.display='none'; document.getElementById('bm-empty').style.display='flex';">
+                  <div id="bm-empty" class="gb-screen-empty" style="display: none;">screenshot<br>coming soon</div>
                 </div>
                 <div class="gb-scanlines"></div>
                 <div class="gb-screen-glow"></div>
               </div>
             </div>
 
-            <!-- Game title + description -->
             <div class="px-3 mt-3 mb-2">
               <h4 class="font-display font-700 text-sm text-ink leading-tight">Ball Merge</h4>
               <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Merge matching balls to level them up!</p>
             </div>
 
-            <!-- Controls: D-pad + A/B -->
-            <div class="flex items-center justify-between px-4 mt-2">
+            <div class="flex items-center justify-between px-3 mt-2">
               <div class="gb-dpad">
                 <div class="gb-dpad-v"></div>
                 <div class="gb-dpad-h"></div>
                 <div class="gb-dpad-center"></div>
               </div>
-              <div class="gb-btn-group">
-                <div class="gb-btn gb-btn-b">B</div>
-                <div class="gb-btn gb-btn-a" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                  <span class="iconify text-white text-sm" data-icon="mdi:circle-double"></span>
-                </div>
+              <div class="gb-btn-logo" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                <span class="iconify text-white text-2xl" data-icon="mdi:circle-double"></span>
               </div>
             </div>
 
-            <!-- START / SELECT -->
             <div class="flex items-center justify-center gap-6 mt-3">
               <div class="flex flex-col items-center gap-1">
                 <div class="gb-meta-pill"></div>
@@ -397,7 +390,6 @@
               </div>
             </div>
 
-            <!-- Brand + Speaker -->
             <div class="flex items-center justify-between px-3 mt-3">
               <span class="gb-brand-text" style="--gb-color-dark: #B098D0;">LaterNightLab<span class="gb-tm">™</span></span>
               <div class="gb-speaker" style="--gb-color-dark: #B098D0;">
@@ -412,7 +404,7 @@
         </a>
 
         <!-- ===== CHROMATIC FACTORY ===== -->
-        <a href="https://chromatic-factory.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card reveal-up" data-game-index="1">
+        <a href="https://chromatic-factory.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card" style="--delay: 0.2s;">
           <div class="gb-body" style="--gb-color: #C8E8D8; --gb-color-dark: #98C8B0;">
 
             <div class="flex items-center gap-2 mb-1 px-2">
@@ -422,18 +414,10 @@
 
             <div class="gb-screen-bezel">
               <div class="gb-screen">
-                <div class="gb-screen-content" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4ECDC4 100%);">
-                  <div class="relative w-full h-full flex items-center justify-center">
-                    <div class="w-16 h-16 border-[3px] border-white/30 rounded-lg flex items-center justify-center bg-white/10">
-                      <span class="iconify text-white/80 text-3xl" data-icon="mdi:factory"></span>
-                    </div>
-                    <div class="absolute top-2 left-3 w-2.5 h-8 rounded bg-white/20"></div>
-                    <div class="absolute top-2 left-7 w-2.5 h-12 rounded bg-white/15"></div>
-                    <div class="absolute bottom-2 right-4 w-2.5 h-6 rounded bg-white/20"></div>
-                    <div class="absolute bottom-2 right-8 w-2.5 h-10 rounded bg-white/15"></div>
-                    <div class="absolute top-3 right-3 w-3 h-3 rounded-full bg-white/25"></div>
-                    <div class="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-white/25"></div>
-                  </div>
+                <div class="gb-screen-content">
+                  <img src="chromatic_factory_screenshot.png" alt="Chromatic Factory"
+                       onerror="this.style.display='none'; document.getElementById('cf-empty').style.display='flex';">
+                  <div id="cf-empty" class="gb-screen-empty" style="display: none;">screenshot<br>coming soon</div>
                 </div>
                 <div class="gb-scanlines"></div>
                 <div class="gb-screen-glow"></div>
@@ -445,17 +429,14 @@
               <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Run a color factory — mix, sort & produce!</p>
             </div>
 
-            <div class="flex items-center justify-between px-4 mt-2">
+            <div class="flex items-center justify-between px-3 mt-2">
               <div class="gb-dpad">
                 <div class="gb-dpad-v"></div>
                 <div class="gb-dpad-h"></div>
                 <div class="gb-dpad-center"></div>
               </div>
-              <div class="gb-btn-group">
-                <div class="gb-btn gb-btn-b">B</div>
-                <div class="gb-btn gb-btn-a" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                  <span class="iconify text-white text-sm" data-icon="mdi:palette"></span>
-                </div>
+              <div class="gb-btn-logo" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                <span class="iconify text-white text-2xl" data-icon="mdi:palette"></span>
               </div>
             </div>
 
@@ -484,7 +465,7 @@
         </a>
 
         <!-- ===== TRAFFIC RUSH ===== -->
-        <a href="https://traffic-rush-brown.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card reveal-up" data-game-index="2">
+        <a href="https://traffic-rush-brown.vercel.app/" target="_blank" rel="noopener noreferrer" class="gameboy-card" style="--delay: 0.4s;">
           <div class="gb-body" style="--gb-color: #E8D4C4; --gb-color-dark: #C8B0A0;">
 
             <div class="flex items-center gap-2 mb-1 px-2">
@@ -494,22 +475,10 @@
 
             <div class="gb-screen-bezel">
               <div class="gb-screen">
-                <div class="gb-screen-content" style="background: linear-gradient(135deg, #2d3436 0%, #636e72 40%, #FF8A5C 100%);">
-                  <div class="relative w-full h-full flex items-center justify-center">
-                    <div class="w-16 h-16 border-[3px] border-white/30 rounded-lg flex items-center justify-center bg-white/10">
-                      <span class="iconify text-white/80 text-3xl" data-icon="mdi:car-speed-limiter"></span>
-                    </div>
-                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[2px] h-full bg-white/10"></div>
-                    <div class="absolute top-3 left-5 w-5 h-3 rounded bg-white/20"></div>
-                    <div class="absolute top-8 right-6 w-5 h-3 rounded bg-accent2/30"></div>
-                    <div class="absolute bottom-5 left-7 w-5 h-3 rounded bg-accent3/30"></div>
-                    <div class="absolute bottom-10 right-4 w-5 h-3 rounded bg-white/20"></div>
-                    <div class="absolute top-2 right-2 w-3 h-8 rounded bg-white/15 flex flex-col items-center justify-center gap-[2px]">
-                      <div class="w-[5px] h-[5px] rounded-full bg-red-400/50"></div>
-                      <div class="w-[5px] h-[5px] rounded-full bg-yellow-300/50"></div>
-                      <div class="w-[5px] h-[5px] rounded-full bg-green-400/50"></div>
-                    </div>
-                  </div>
+                <div class="gb-screen-content">
+                  <img src="traffic_rush_screenshot.png" alt="Traffic Rush"
+                       onerror="this.style.display='none'; document.getElementById('tr-empty').style.display='flex';">
+                  <div id="tr-empty" class="gb-screen-empty" style="display: none;">screenshot<br>coming soon</div>
                 </div>
                 <div class="gb-scanlines"></div>
                 <div class="gb-screen-glow"></div>
@@ -521,17 +490,14 @@
               <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Guide cars through chaos before time runs out!</p>
             </div>
 
-            <div class="flex items-center justify-between px-4 mt-2">
+            <div class="flex items-center justify-between px-3 mt-2">
               <div class="gb-dpad">
                 <div class="gb-dpad-v"></div>
                 <div class="gb-dpad-h"></div>
                 <div class="gb-dpad-center"></div>
               </div>
-              <div class="gb-btn-group">
-                <div class="gb-btn gb-btn-b">B</div>
-                <div class="gb-btn gb-btn-a" style="background: linear-gradient(135deg, #2d3436, #FF8A5C);">
-                  <span class="iconify text-white text-sm" data-icon="mdi:traffic-light"></span>
-                </div>
+              <div class="gb-btn-logo" style="background: linear-gradient(135deg, #2d3436, #FF8A5C);">
+                <span class="iconify text-white text-2xl" data-icon="mdi:traffic-light"></span>
               </div>
             </div>
 
@@ -605,18 +571,6 @@
     menuBtn.addEventListener('click', () => menu.classList.remove('hidden'));
     menuClose.addEventListener('click', () => menu.classList.add('hidden'));
     mobileLinks.forEach(link => link.addEventListener('click', () => menu.classList.add('hidden')));
-
-    const revealElements = document.querySelectorAll('.reveal-up');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const idx = parseInt(entry.target.dataset.gameIndex) || 0;
-          setTimeout(() => { entry.target.classList.add('visible'); }, idx * 180);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    revealElements.forEach(el => observer.observe(el));
   </script>
 
 </body>
