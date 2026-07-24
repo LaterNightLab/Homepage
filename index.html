@@ -270,6 +270,12 @@
       background: var(--gb-color-dark);
       opacity: 0.3;
     }
+
+    .gb-description {
+      min-height: calc(1.4em * 3);
+      overflow: hidden;
+      word-wrap: break-word;
+    }
   </style>
 </head>
 
@@ -365,7 +371,7 @@
 
             <div class="px-3 mt-3 mb-2">
               <h4 class="font-display font-700 text-sm text-ink leading-tight">Ball Merge</h4>
-              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Merge matching balls to level them up!</p>
+              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5 gb-description">Merge matching balls to level them up!</p>
             </div>
 
             <div class="flex items-center justify-between px-3 mt-2">
@@ -375,7 +381,7 @@
                 <div class="gb-dpad-center"></div>
               </div>
               <div class="gb-btn-logo" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                <span class="iconify text-white text-2xl" data-icon="mdi:circle-double"></span>
+                <img src="ball_merge.jpg" alt="Ball Merge" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
               </div>
             </div>
 
@@ -426,7 +432,7 @@
 
             <div class="px-3 mt-3 mb-2">
               <h4 class="font-display font-700 text-sm text-ink leading-tight">Chromatic Factory</h4>
-              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Run a color factory — mix, sort & produce!</p>
+              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5 gb-description">Run a color factory — mix, sort & produce!</p>
             </div>
 
             <div class="flex items-center justify-between px-3 mt-2">
@@ -436,7 +442,7 @@
                 <div class="gb-dpad-center"></div>
               </div>
               <div class="gb-btn-logo" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                <span class="iconify text-white text-2xl" data-icon="mdi:palette"></span>
+                <img src="chromatic_factory.jpg" alt="Chromatic Factory" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
               </div>
             </div>
 
@@ -487,7 +493,7 @@
 
             <div class="px-3 mt-3 mb-2">
               <h4 class="font-display font-700 text-sm text-ink leading-tight">Traffic Rush</h4>
-              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5">Guide cars through chaos before time runs out!</p>
+              <p class="font-display font-300 text-[11px] text-ink/50 leading-snug mt-0.5 gb-description">Guide cars through chaos before time runs out!</p>
             </div>
 
             <div class="flex items-center justify-between px-3 mt-2">
@@ -497,7 +503,7 @@
                 <div class="gb-dpad-center"></div>
               </div>
               <div class="gb-btn-logo" style="background: linear-gradient(135deg, #2d3436, #FF8A5C);">
-                <span class="iconify text-white text-2xl" data-icon="mdi:traffic-light"></span>
+                <img src="traffic_rush.jpg" alt="Traffic Rush" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
               </div>
             </div>
 
@@ -571,6 +577,26 @@
     menuBtn.addEventListener('click', () => menu.classList.remove('hidden'));
     menuClose.addEventListener('click', () => menu.classList.add('hidden'));
     mobileLinks.forEach(link => link.addEventListener('click', () => menu.classList.add('hidden')));
+
+    // Resize descriptions dynamically to fit 3 lines
+    function fitDescriptionsToThreeLines() {
+      document.querySelectorAll('.gb-description').forEach(desc => {
+        const maxHeight = desc.offsetHeight;
+        let fontSize = parseFloat(window.getComputedStyle(desc).fontSize);
+        const minFontSize = 8;
+        
+        while (desc.scrollHeight > maxHeight && fontSize > minFontSize) {
+          fontSize -= 0.5;
+          desc.style.fontSize = fontSize + 'px';
+        }
+      });
+    }
+
+    // Run on load
+    window.addEventListener('load', fitDescriptionsToThreeLines);
+    
+    // Run on window resize
+    window.addEventListener('resize', fitDescriptionsToThreeLines);
   </script>
 
 </body>
